@@ -1,134 +1,159 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
-      integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
-      crossorigin="anonymous"
-    ></script>
-    <script src="//code.angularjs.org/snapshot/angular.min.js"></script>
-    <title>Casamento Emilly e Gabriel</title>
-  </head>
-  <body>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-      crossorigin="anonymous"
-    ></script>
 
-    <div class="container" ng-app="myApp" ng-controller="myController">
-      <div
-        class="d-flex justify-content-around flex-wrap p-3"
-        style="gap: 15px"
-      >
-        <div
-          ng-repeat="presente in listaPresentes"
-          class="card flex-grow-1"
-          style="max-width: 300px"
-        >
-          <img
-            class="card-img-top"
-            src="{{presente.imagem}}"
-            alt="Card image cap"
-          />
-          <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">{{presente.descricao}}</h5>
-            <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-            >
-              {{presente.valor}}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Lista de presentes de casamento de Emilly e Gabriel. Escolha um presente e contribua via PIX." />
+  <meta name="keywords" content="casamento, presentes, lista de casamento, Emilly e Gabriel" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <script src="https://code.angularjs.org/snapshot/angular.min.js"></script>
+  <title>Casamento Emilly e Gabriel - Lista de Presentes</title>
+</head>
+
+<body ng-app="myApp" ng-controller="myController">
+
+  <!-- Header Hero -->
+  <header class="hero-header text-center">
+    <h1>Emilly & Gabriel</h1>
+    <div class="divider mx-auto"></div>
+    <p>Celebrando nosso amor</p>
+    <p class="subtitle">Lista de Presentes</p>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="container py-5">
+    <div class="row g-4">
+      <div ng-repeat="presente in listaPresentes" class="col-12 col-sm-6 col-lg-3">
+        <div class="card h-100 presente-card" ng-click="abrirModal(presente)" role="button" tabindex="0">
+          <img ng-src="{{presente.imagem}}" class="card-img-top" alt="{{presente.descricao}}"
+            style="height: 200px; object-fit: cover;">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title flex-grow-1">{{presente.descricao}}</h5>
+            <p class="card-price text-center mb-3">{{presente.valor}}</p>
+            <button class="btn btn-custom w-100" type="button">
+              Ver Detalhes
             </button>
           </div>
         </div>
       </div>
+    </div>
+  </main>
 
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Modal title
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">...</div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
-              </button>
+  <!-- Modal Bootstrap -->
+  <div class="modal fade" id="presenteModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true"
+    ng-class="{'show d-block': modalAberto}" ng-click="fecharModal($event)">
+    <div class="modal-dialog modal-dialog-centered" ng-click="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header bg-gradient-custom">
+          <h5 class="modal-title" id="modalTitle">{{presenteSelecionado.descricao}}</h5>
+          <button type="button" class="btn-close" ng-click="fecharModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img ng-src="{{presenteSelecionado.imagem}}" alt="{{presenteSelecionado.descricao}}"
+            class="img-fluid rounded mb-3" style="max-height: 250px; width: 100%; object-fit: contain;">
+
+          <div class="alert alert-light border" role="alert">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold">Valor:</span>
+              <span class="text-olive fs-5 fw-bold">{{presenteSelecionado.valor}}</span>
             </div>
           </div>
+
+          <div class="pix-section p-3 rounded">
+            <h6 class="text-center mb-3">Contribua via PIX</h6>
+            <div class="pix-key p-2 rounded text-center mb-2">
+              Chave PIX: seuemail@exemplo.com
+            </div>
+            <p class="text-center text-muted small mb-0">
+              Valor sugerido: R$ {{presenteSelecionado.valorPix}}
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" ng-click="fecharModal()">Fechar</button>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+
+  <!-- Backdrop do Modal -->
+  <div class="modal-backdrop fade" ng-class="{'show': modalAberto}" ng-if="modalAberto"></div>
+
+  <!-- Footer -->
+  <footer class="footer text-center py-4">
+    <p>Feito com <span class="heart">♥</span> para Emilly & Gabriel</p>
+    <p>Obrigado por fazer parte deste momento especial!</p>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- AngularJS Controller -->
+  <script>
+    var app = angular.module("myApp", []);
+
+    app.controller("myController", function ($scope) {
+      $scope.listaPresentes = [
+        {
+          descricao: "Kit Japonês para a Noiva",
+          valor: "R$ 499,00",
+          valorPix: 499,
+          imagem: "img/japones.jpg",
+        },
+        {
+          descricao: "Avental para o noivo fazer a janta",
+          valor: "R$ 235,70",
+          valorPix: 235.7,
+          imagem: "img/avental.jpg",
+        },
+        {
+          descricao: "Acessório para cortar a unha do dedão da noiva",
+          valor: "R$ 539,90",
+          valorPix: 539.9,
+          imagem: "img/lixadeira.jpg",
+        },
+        {
+          descricao: "Primeiro lugar na fila do jantar",
+          valor: "R$ 720,00",
+          valorPix: 720,
+          imagem: "img/fila-buffet.jpg",
+        },
+      ];
+
+      $scope.modalAberto = false;
+      $scope.presenteSelecionado = {};
+
+      $scope.abrirModal = function (presente) {
+        $scope.presenteSelecionado = presente;
+        $scope.modalAberto = true;
+        document.body.classList.add('modal-open');
+      };
+
+      $scope.fecharModal = function (event) {
+        if (!event || event.target.id === 'presenteModal' || event.currentTarget.classList.contains('btn-close') || event.currentTarget.classList.contains('btn-secondary')) {
+          $scope.modalAberto = false;
+          document.body.classList.remove('modal-open');
+        }
+      };
+
+      // Fechar modal com tecla ESC
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && $scope.modalAberto) {
+          $scope.$apply(function () {
+            $scope.fecharModal();
+          });
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>
-
-<script>
-  var app = angular.module("myApp", []);
-
-  app.controller("myController", function ($scope) {
-    $scope.listaPresentes = [
-      {
-        descricao: "Kit Japonês para a Noiva",
-        valor: "R$ 499,00",
-        valorPix: 499,
-        imagem: "img/japones.jpg",
-      },
-      {
-        descricao: "Avental para o noivo fazer a janta",
-        valor: "R$ 235,70",
-        valorPix: 235.7,
-        imagem: "img/avental.jpg",
-      },
-      {
-        descricao: "Acessório para cortar a unha do dedão da noiva",
-        valor: "R$ 539,90",
-        valorPix: 539,
-        imagem: "img/lixadeira.jpg",
-      },
-      {
-        descricao: "Primeiro lugar na fila do jantar",
-        valor: "R$ 720,00",
-        valorPix: 720,
-        imagem: "img/fila-buffet.jpg",
-      },
-    ];
-
-    $scope.abrirModal = function (presente) {};
-  });
-</script>
